@@ -18,6 +18,13 @@
     <!-- 加载properties配置文件 -->
 	<context:property-placeholder location="classpath:WEB-INF/conf/jdbc.properties"/>
 
+    <!-- 该 BeanPostProcessor 将自动对标注 @Autowired 的 Bean 进行注入 -->   
+    <bean class="org.springframework.beans.factory.annotation.AutowiredAnnotationBeanPostProcessor"/>
+
+    <context:component-scan base-package="com.springmvc" >
+      <context:exclude-filter type="annotation" expression="org.springframework.stereotype.Controller" />  
+    </context:component-scan>
+
 	<!-- 数据源配置 -->
     <bean id="defaultDataSource" class="org.springframework.jdbc.datasource.DriverManagerDataSource">  
 	    <property name="driverClassName">  
@@ -32,25 +39,14 @@
 	    <property name="password">  
 	        <value>${jdbc_password}</value>  
 	    </property>  
-	    <!--  
-        最大连接数据库连接数  
-        <property name="maxActive" value="500" />  
-        最大等待连接中的数量   0标识没有限制  
-        <property name="maxIdle" value="10" />  
-        最大等待毫秒数  超时报错  
-        <property name="maxWait" value="500" />  
-        <property name="defaultAutoCommit" value="true" />  
-        是否自我中断  
-        <property name="removeAbandoned" value="true" />  
-        <property name="removeAbandonedTimeout" value="60" />  
-    </bean>  	 -->
 	</bean>  
+	
 	<!-- 事务管理器 -->	
 	<bean id="transactionManager" class="org.springframework.jdbc.datasource.DataSourceTransactionManager">
 	  <property name="dataSource" ref="defaultDataSource" />
 	</bean>
 
-	<bean id="userDAOProxy" class="org.springframework.transaction.interceptor.TransactionProxyFactoryBean">
+<!-- 	<bean id="userDAOProxy" class="org.springframework.transaction.interceptor.TransactionProxyFactoryBean">
 		<property name="transactionManager">
 			<ref bean="transactionManager" />
 		</property>
@@ -64,60 +60,32 @@
 				<prop key="save*">PROPAGATION_REQUIRED,-Exception</prop>
 			</props>
 		</property>
-	</bean>
-
-<!--   <tx:advice id="txAdvice" transaction-manager="transactionManager">
-    <tx:attributes>
-      <tx:method name="delete*" propagation="REQUIRED" read-only="false" 
-                            rollback-for="java.lang.Exception" no-rollback-for="java.lang.RuntimeException"/>
-      <tx:method name="insert*" propagation="REQUIRED" read-only="false" 
-                            rollback-for="java.lang.RuntimeException" />
-      <tx:method name="update*" propagation="REQUIRED" read-only="false" 
-                            rollback-for="java.lang.Exception" />
-      
-      <tx:method name="find*" propagation="SUPPORTS" read-only="true"/>
-      <tx:method name="get*" propagation="SUPPORTS" read-only="true"/>
-      <tx:method name="select*" propagation="SUPPORTS" read-only="true"/>
-    </tx:attributes>
-  </tx:advice>
-  
-  <aop:config>    
-    <aop:pointcut id="ServiceMethods" expression="execution(public * com.lixing.scm.test.service.*.*(..))" /> 把事务控制在Service层
-    <aop:advisor pointcut-ref="ServiceMethods" advice-ref="txAdvice" />
-  </aop:config> -->
-
-
+	</bean> -->
+	<!-- 事务控制和AOP切入 -->	
+	<tx:advice id="txAdvice" transaction-manager="transactionManager">
+	   <tx:attributes>
+	     <tx:method name="delete*" propagation="REQUIRED" read-only="false" rollback-for="java.lang.Exception" no-rollback-for="java.lang.RuntimeException"/>
+	     <tx:method name="insert*" propagation="REQUIRED" read-only="false" rollback-for="java.lang.Exception" />
+	     <tx:method name="update*" propagation="REQUIRED" read-only="false" rollback-for="java.lang.Exception" />
 	
+	   </tx:attributes>
+	</tx:advice>	  
+	<aop:config>    
+	   <aop:pointcut id="ServiceMethods" expression="execution(* com.springmvc.service.impl.*.*(..))" />
+	   <aop:advisor pointcut-ref="ServiceMethods" advice-ref="txAdvice" />
+	</aop:config>
 	
+	<!-- mysbatis sqlSessionFactory -->
 	<bean id="sqlSessionFactory" class="org.mybatis.spring.SqlSessionFactoryBean">  
 	    <property name="dataSource" ref="defaultDataSource" />  
 	    <property name="configLocation" value="classpath:WEB-INF/conf/mybatis/mybatis-config.xml"></property>  
 	</bean>  
+	<!-- mysbatis代理接口设置 -->
 	<bean id="userDao" class="org.mybatis.spring.mapper.MapperFactoryBean">  
 	    <property name="mapperInterface" value="com.springmvc.dao.UserDao"></property>  
 	    <property name="sqlSessionFactory" ref="sqlSessionFactory"></property>  
 	</bean>  
-	
 
-    
-    
-    <!-- 	<bean id="config"
-		class="org.springframework.beans.factory.config.PropertyPlaceholderConfigurer">
-		是否忽略不可解析的
-		<property name="ignoreUnresolvablePlaceholders" value="true" />
-		多个locations， 单个location <value>
-		<property name="locations">
-			<list>
-				<value>/WEB-INF/config/config.properties</value>
-				<value>/WEB-INF/config/urlAddress.properties</value>
-			 
-				<value>/WEB-INF/platform/config/config.properties</value>
-				<value>/WEB-INF/config/config.properties</value>
-				<value>/WEB-INF/hr/config/config.properties</value>
-				
-			</list>
-		</property>
-	</bean> -->
 </beans>
 
 
