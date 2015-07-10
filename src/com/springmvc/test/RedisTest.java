@@ -9,6 +9,7 @@ import org.springframework.data.redis.core.RedisCallback;
 import org.springframework.data.redis.core.RedisTemplate;
 
 import com.springmvc.entity.User;
+import com.springmvc.redis.RedisClientTemplate;
 
 import redis.clients.jedis.Jedis;
 
@@ -16,23 +17,13 @@ public class RedisTest {
 	@Autowired
 	private static RedisTemplate redisTemplate; //依赖注入
 	
-	//private ApplicationContext ctx = new FileSystemXmlApplicationContext("classpath:WEB-INF/conf/spring/applicationContext.xml");
+	private static ApplicationContext ctx = new FileSystemXmlApplicationContext("classpath:WEB-INF/conf/spring/redis-context.xml");
 	
 	public static void main(String[] args) {
 		
-		final User user = new User();
-		redisTemplate.execute(new RedisCallback<Object>() {  
-	        @Override  
-	        public Object doInRedis(RedisConnection connection)  
-	                throws DataAccessException {  
-	            connection.set(  
-	                    redisTemplate.getStringSerializer().serialize(  
-	                            "user.uid." + user.getName()),  
-	                    redisTemplate.getStringSerializer().serialize(  
-	                            user.getPassword()));  
-	            return null;  
-	        }  
-	    });  
+        RedisClientTemplate redisClient = (RedisClientTemplate) ctx.getBean("redisClientTemplate");
+        redisClient.set("a", "abc");
+        System.out.println(redisClient.get("a"));
 
 	}
 

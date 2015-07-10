@@ -10,5 +10,6 @@
 	<classpathentry kind="con" path="org.eclipse.jst.j2ee.internal.web.container"/>
 	<classpathentry kind="con" path="org.eclipse.jst.j2ee.internal.module.container"/>
 	<classpathentry kind="lib" path="D:/workstation/apache-tomcat-7.0.63/lib/servlet-api.jar"/>
+	<classpathentry kind="lib" path="D:/用户目录/我的文档/GitHub/SpringMVC/Webroot/WEB-INF/lib/log4j-1.2.15.jar"/>
 	<classpathentry kind="output" path="build/classes"/>
 </classpath>
