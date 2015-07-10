@@ -1,6 +1,7 @@
 package com.springmvc.controller;
 
 import javax.annotation.Resource;
+import javax.servlet.http.HttpSession;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
@@ -9,6 +10,7 @@ import org.springframework.context.support.FileSystemXmlApplicationContext;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.servlet.ModelAndView;
 
 import com.springmvc.entity.User;
@@ -46,6 +48,22 @@ public class LoginController {
         return new ModelAndView("index");  
     }  
       
+    
+	  /** 
+	   * 测试返回JSON数据 
+	   * @param session 
+	   * @return 
+	   */  
+	  @RequestMapping(value="/test")  
+	  @ResponseBody  
+	  public Object test(HttpSession session){  
+	        
+	      System.out.println("test....................");  
+	      return session.getAttribute("permit");  
+	  }  
+    
+    
+    
     /*** 
      * 验证参数是否为空 
      * @param params 
