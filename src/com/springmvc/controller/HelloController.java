@@ -11,7 +11,7 @@ import org.springframework.web.servlet.ModelAndView;
 @Controller  
 public class HelloController{       
 
-    @RequestMapping("/hello")  
+    @RequestMapping(value="/hello")  
     public ModelAndView index(){  
         //创建模型跟视图，用于渲染页面。并且指定要返回的页面为hello页面  
     	String message = "Hello World, Spring 3.0!";

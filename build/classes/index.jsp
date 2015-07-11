@@ -3,6 +3,7 @@
 <html>
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+<script type="text/javascript" src="http://libs.baidu.com/jquery/1.10.2/jquery.min.js"></script>
 <title>Insert title here</title>
 </head>
 <body>
@@ -15,5 +16,31 @@
 	<p>
 	<input type="submit" value="submit" />
 </form>     
+
+<input id="demo" type="button" value="json" />
 </body>
+<script type="text/javascript">
+$(function(){
+	$('#demo').on('click',function(){
+	  	$.ajax({
+			url:'/SpringMVC/hello.json', //目标controler
+	        type: 'GET',
+	        data:{},
+	        dataType: "json",
+	        contentType:"application/json",  
+	        cache: false,
+	        async: false,
+	        success: function (data,textStatus) {
+	        	//alert('success');
+	        	alert(JSON.stringify(data));
+			},
+	        error:function(XMLHttpRequest, textStatus, errorThrown){
+	        	alert(XMLHttpRequest.status);
+                alert(XMLHttpRequest.readyState);
+                alert(textStatus);
+			}
+	    });
+	});
+});
+</script>
 </html>

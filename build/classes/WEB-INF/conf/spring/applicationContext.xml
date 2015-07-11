@@ -16,7 +16,7 @@
 
 
     <!-- 加载properties配置文件 -->
-	<context:property-placeholder location="classpath:WEB-INF/conf/jdbc.properties"/>
+	<context:property-placeholder location="classpath:WEB-INF/conf/jdbc.properties" ignore-unresolvable="true"/>
 
     <!-- 该 BeanPostProcessor 将自动对标注 @Autowired 的 Bean 进行注入 -->   
     <bean class="org.springframework.beans.factory.annotation.AutowiredAnnotationBeanPostProcessor"/>
@@ -85,10 +85,8 @@
 	    <property name="mapperInterface" value="com.springmvc.dao.UserDao"></property>  
 	    <property name="sqlSessionFactory" ref="sqlSessionFactory"></property>  
 	</bean>  
-	
 	<!-- 引入同文件夹下的redis属性配置文件 -->
-    <import resource="redis-context.xml"/>
-
+<!--     <import resource="redis-context.xml"/> -->
 </beans>
 
 

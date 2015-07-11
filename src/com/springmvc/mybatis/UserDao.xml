@@ -4,16 +4,16 @@
 <mapper namespace="com.springmvc.dao.UserDao"> 
  
 	<select id="selectUser" parameterType="com.springmvc.entity.User" resultType="com.springmvc.entity.User">  
-	    SELECT * FROM test.user WHERE name=#{name} AND password=#{password}  
+	    SELECT * FROM test.demo WHERE name=#{name} AND password=#{password}  
 	</select>  
 	<insert id="insertUser" parameterType="com.springmvc.entity.User" flushCache="true">  
-	   INSERT INTO test.user (name,password) VALUES (#{name},#{password})  
+	   INSERT INTO test.demo (name,password) VALUES (#{name},#{password})  
 	</insert>  
 	<update id="updateUser" parameterType="com.springmvc.entity.User">  
-	    UPDATE test.user SET password=#{password} WHERE name=#{name}  
+	    UPDATE test.demo SET password=#{password} WHERE name=#{name}  
 	</update>  
 	<delete id="deleteUser" parameterType="int">  
-	    DELETE FROM test.user WHERE id=#{id}  
+	    DELETE FROM test.demo WHERE id=#{id}  
 	</delete>  
 	
 </mapper>
