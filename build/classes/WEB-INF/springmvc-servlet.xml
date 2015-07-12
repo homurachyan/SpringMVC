@@ -11,39 +11,47 @@
     http://www.springframework.org/schema/context/spring-context-3.0.xsd
     http://www.springframework.org/schema/mvc
     http://www.springframework.org/schema/mvc/spring-mvc-3.1.xsd">
-     
-   <!-- 扫描controller（controller层注入） -->
-   <context:component-scan base-package="com.springmvc.controller"/>
-<!--    	<mvc:annotation-driven />
+    
+    <!-- 开启注解驱动 -->
+	<mvc:annotation-driven />   
+	  
+    <!-- 扫描controller（controller层注入） -->
+    <!-- <context:component-scan base-package="com.springmvc.controller"/>   -->
 	<context:component-scan base-package="com.springmvc">
 		<context:include-filter type="annotation" expression="org.springframework.stereotype.Controller" />   
     	<context:exclude-filter type="annotation" expression="org.springframework.stereotype.Service" />    
-	</context:component-scan> -->
-<mvc:annotation-driven />
+	</context:component-scan>
+
 
 	<!--Spring3.1开始的注解 HandlerMapping --> 
-	<bean class="org.springframework.web.servlet.mvc.method.annotation.RequestMappingHandlerMapping"/>  
+	<bean class="org.springframework.web.servlet.mvc.method.annotation.RequestMappingHandlerMapping">  
+	   
+	</bean>
 	
 	<!--Spring3.1开始的注解 HandlerAdapter -->  
 	<bean class="org.springframework.web.servlet.mvc.method.annotation.RequestMappingHandlerAdapter"/>  
 	
-    
-	<bean id="messageAdapter" class="org.springframework.web.servlet.mvc.annotation.AnnotationMethodHandlerAdapter">
+    <!--Spring3.1开始的注解 HandlerAdapter -->  
+<!-- 	<bean id="messageAdapter" class="org.springframework.web.servlet.mvc.annotation.AnnotationMethodHandlerAdapter">
         <property name="messageConverters">
             <list>
-                <!-- Support JSON --> 
-                <bean class="org.springframework.http.converter.json.MappingJacksonHttpMessageConverter"/>
+	            <bean id="byteArray_hmc" class="org.springframework.http.converter.ByteArrayHttpMessageConverter"/>
+	            <bean id="string_hmc" class="org.springframework.http.converter.StringHttpMessageConverter"/>
+	            <bean id="resource_hmc" class="org.springframework.http.converter.ResourceHttpMessageConverter"/>
+	            <bean id="source_hmc" class="org.springframework.http.converter.xml.SourceHttpMessageConverter"/>
+	            <bean id="xmlAwareForm_hmc" class="org.springframework.http.converter.xml.XmlAwareFormHttpMessageConverter"/>
+	            <bean id="jaxb2RootElement_hmc" class="org.springframework.http.converter.xml.Jaxb2RootElementHttpMessageConverter"/>
+                <bean id="jackson_hmc" class="org.springframework.http.converter.json.MappingJacksonHttpMessageConverter"/>
             </list>
         </property>
     </bean>
-	    <bean id="exceptionMessageAdapter" class="org.springframework.web.servlet.mvc.annotation.AnnotationMethodHandlerExceptionResolver">
+	<bean id="exceptionMessageAdapter" class="org.springframework.web.servlet.mvc.annotation.AnnotationMethodHandlerExceptionResolver">
         <property name="messageConverters">
             <list>
-                <!-- Support JSON --> 
                 <bean class="org.springframework.http.converter.json.MappingJacksonHttpMessageConverter"/>
             </list>
         </property>
-    </bean>	
+    </bean>	 -->
 	
      
    <!-- 配置JSP视图 -->
@@ -53,55 +61,8 @@
 	    <property name="suffix" value=".jsp"/>   
    </bean>      
    
-<!-- 	<bean class="org.springframework.web.servlet.mvc.annotation.AnnotationMethodHandlerAdapter">
-	  <property name="messageConverters">
-	   <list>
-	    <bean class="org.springframework.http.converter.json.MappingJacksonHttpMessageConverter" />
-	   </list>
-	  </property>
-	</bean>    -->
-   
- <!-- ContentNegotiatingViewResolver视图解析器,利用他就可以配置多种返回值 -->
-<!--  <bean  class="org.springframework.web.servlet.view.ContentNegotiatingViewResolver">         
-	   这里是否忽略掉accept header，默认就是false
-	   <property name="ignoreAcceptHeader" value="true" />      
-	   如果所有的mediaType都没匹配上，就会使用defaultContentType
-	   <property name="defaultContentType" value="text/html" /> 
-	         
-	   <property name="mediaTypes">    
-		    <map>     
-		     <entry key="json" value="application/json" />           
-		    </map>    
-	   </property>   
-	   
-	   默认使用MappingJacksonJsonView生成jsonview ModelAndView 里的数据变成JSON
-	   <property name="defaultViews">    
-		   <list>     
-		      <bean class="org.springframework.web.servlet.view.json.MappingJacksonJsonView">        
-		         <property  name="extractValueFromSingleKeyModel" value="true" />     
-		      </bean>           
-		    </list>     
-	   </property>  
-  </bean>   
-  
-  <bean id="stringConverter" class="org.springframework.http.converter.StringHttpMessageConverter">  
-        <property name="supportedMediaTypes">  
-            <list>  
-                <value>text/plain;charset=UTF-8</value>  
-            </list>  
-        </property>  
-    </bean>  
-    <bean id="jsonConverter"  
-        class="org.springframework.http.converter.json.MappingJacksonHttpMessageConverter"></bean>  
-    <bean  
-        class="org.springframework.web.servlet.mvc.annotation.AnnotationMethodHandlerAdapter">  
-        <property name="messageConverters">  
-            <list>  
-                <ref bean="stringConverter"/>  
-                <ref bean="jsonConverter" />  
-            </list>  
-        </property>  
-    </bean>      -->
+   <!-- ContentNegotiatingViewResolver视图解析器,利用他就可以配置多种返回值 -->
+
 <!--  配置Json视图
    <bean id="mappingJacksonHttpMessageConverter" class="org.springframework.http.converter.json.MappingJacksonHttpMessageConverter">
        <property name="supportedMediaTypes">
@@ -123,8 +84,8 @@
    <bean id="requestMappingHandlerAdapter" class="org.springframework.web.servlet.mvc.method.annotation.RequestMappingHandlerAdapter">
        <property name="messageConverters">
            <list>
-               <ref bean="mappingJacksonHttpMessageConverter"/>json转换器 
-               <ref bean="stringHttpMessageConverter"/>消息转换器 
+               <ref bean="mappingJacksonHttpMessageConverter"/>
+               <ref bean="stringHttpMessageConverter"/>
            </list>
        </property>
    </bean>

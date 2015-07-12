@@ -7,12 +7,12 @@ import org.springframework.stereotype.Repository;
 import redis.clients.jedis.ShardedJedis;
 import redis.clients.jedis.ShardedJedisPool;
 
-//@Repository("redisDataSource")
+@Repository("redisDataSource")
 public class RedisDataSourceImpl implements RedisDataSource {
 
 	 private static final Logger log = Logger.getLogger(RedisDataSourceImpl.class);
 
-	    //@Autowired
+	    @Autowired
 	    private ShardedJedisPool shardedJedisPool;
 
 	    public ShardedJedis getRedisClient() {

@@ -21,14 +21,13 @@
     <property name="maxWaitMillis" value="${redis.maxWait}" />  
     <property name="testOnBorrow" value="${redis.testOnBorrow}" />  
   </bean>  
-  <bean id="shardedJedisPool" class="redis.clients.jedis.ShardedJedisPool"  scope="singleton">
+  <bean id="shardedJedisPool" class="redis.clients.jedis.ShardedJedisPool" scope="singleton">
         <constructor-arg index="0" ref="redisPoolConfig" />
         <constructor-arg index="1">
             <list>
-                <bean class="redis.clients.jedis.JedisShardInfo">
-                    <constructor-arg name="host" value="${redis.host}" />
-                    <constructor-arg name="port" value="${redis.port}" />
-                    <constructor-arg name="weight" value="1" />
+                <bean name="master" class="redis.clients.jedis.JedisShardInfo">
+                    <constructor-arg index="0" name="host" value="127.0.0.1" />
+                    <constructor-arg index="1" name="port" value="6379" />
                 </bean>
             </list>
         </constructor-arg>

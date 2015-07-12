@@ -2,7 +2,9 @@ package com.springmvc.controller;
 
 import java.io.IOException;
 import java.io.PrintWriter;
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 import javax.annotation.Resource;
@@ -55,62 +57,44 @@ public class LoginController {
         }  
         return new ModelAndView("index");  
     }  
-      
-    
-    @RequestMapping(value="/login2")
-    public Object getjson(HttpServletRequest request,HttpServletResponse response) throws Exception
-    {
-/*        String username = req.getParameter("username");
-        String password = req.getParameter("password");
-        
-        System.out.println("使用Spring内置的支持："+username +"--->" + password);
 
-        Map<String, String> map = new HashMap<String, String>();
-        if(username.equals("xiaoming") && password.equals("123"))
-        {
-            map.put("results", "login success");
-        }
-        else
-        {
-            map.put("results", "login fail");
-        }        
-        */
-/*        ModelAndView modelView=new ModelAndView();  
-        Map<String,Object> modelMap=new HashMap<String,Object>();  
-        modelMap.put("username", "xiaoming");  
-        modelMap.put("password", "123");  
-        modelView.addAllObjects(modelMap);  
-        return modelView; */
-    	//response.setCharacterEncoding("UTF-8");
-        //response.setContentType("application/json");
-		return "json";
-	}  
-    
+    //直接通过空视图传输json
     @RequestMapping(value="/json")
     public void showInfoJson(HttpServletRequest request,
             HttpServletResponse response) {
         String result ="{'name':'xiaoming','password':'123'}";//user
             //接到前台传到的数据，并拼接成新的json对象 
-        response.setContentType("application/json");//设置response的传输格式为json 
-        System.out.println(result); 
+        response.setContentType("application/json;charset=UTF-8");//设置response的传输格式为json 
         try { 
              PrintWriter out = response.getWriter(); 
-             out.write(result);//给页面上传输json对象 
+             //out.write(result);//给页面上传输json对象 
+             out.println("{uuid:'123',name:'456'}");
         } catch (IOException e) { 
              e.printStackTrace(); 
         } 
+        //return null;
     }      
-    @RequestMapping(value = "/hello.json", method = RequestMethod.GET,produces = "application/json")
+    //使用数据绑定@RequestBody/@ResponseBody
+    //@RequestBody 用于将HttpServletRequest的getInputStream()内容绑定到入参
+    //@ResponseBody 用于将方法的返回值作为响应体
+    //注意：他们都只能访问报文体，不能访问报文头
+    @RequestMapping(value = "/hello.json", method = RequestMethod.GET, produces="application/json")
 	// 该注解用于读取Request请求的body部分数据，使用系统默认配置的HttpMessageConverter进行解析，然后把相应的数据绑定到要返回的对象上；
-	public @ResponseBody User hello() {
+	public @ResponseBody List<User> hello(HttpServletRequest request,
+            HttpServletResponse response) {
     	ApplicationContext ctx = new FileSystemXmlApplicationContext("classpath:WEB-INF/conf/spring/applicationContext.xml");
     	userService = (UserService) ctx.getBean("userService");
-    	User user = null;
-		User temp = new User();
-		temp.setName("xiaoming");
-		temp.setPassword("123");
-		user = userService.selectUser(temp);
-        return user;  
+    	List<User> list = new ArrayList<User>();
+		User user1 = new User();
+		user1.setName("xiaoming");
+		user1.setPassword("123");
+		list.add(user1);
+		User user2 = new User();
+		user2.setName("xiaowang");
+		user2.setPassword("456");
+		list.add(user2);
+		//System.out.println(request.getSession().toString());
+        return list;  
 	}
     
     

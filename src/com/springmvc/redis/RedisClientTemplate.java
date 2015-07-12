@@ -23,12 +23,12 @@ import redis.clients.jedis.Tuple;
 
  * 这一层的目的主要也是让再上层的调用不需要关心pool中链接的取得和返还问题了。
  * */
-//@Repository("redisClientTemplate")
+@Repository("redisClientTemplate")
 public class RedisClientTemplate {
 
     private static final Logger log = Logger.getLogger(RedisClientTemplate.class);
 
-    //@Autowired
+    @Autowired
     private RedisDataSource redisDataSource;
 
     public void disconnect() {
