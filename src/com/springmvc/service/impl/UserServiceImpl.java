@@ -12,18 +12,12 @@ public class UserServiceImpl implements UserService{
 	private UserDao userDao;
     
     public int insertUser(User user) throws Exception {
-		User temp = new User();
-		temp.setName(user.getName());
-		temp.setPassword(user.getPassword());
-		userDao.insertUser(temp);
-		System.out.println("insert succ");
-		temp.setPassword(null);
-		
-    	if(temp.getPassword()==null){
+    	if(user.getPassword()==null||user.getName()==null){
     		throw new Exception();
     	}else{
-    		return 1;
+    		userDao.insertUser(user);
     	}
+    	return 1;
     }
 
 	@Override

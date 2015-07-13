@@ -22,8 +22,7 @@ public class RedisUserDaoImpl implements RedisUserDao{
 	}
 
 	@Override
-	public int insertUser(User user) {
-		
+	public int insertUser(User user) {		
 		redisClientTemplate.hset("user", "username", user.getName());
 		redisClientTemplate.hset("user", "password", user.getPassword());
 		return 1;
