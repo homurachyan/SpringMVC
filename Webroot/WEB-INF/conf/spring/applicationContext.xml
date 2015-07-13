@@ -24,6 +24,9 @@
     <context:component-scan base-package="com.springmvc" >
       <context:exclude-filter type="annotation" expression="org.springframework.stereotype.Controller" />  
     </context:component-scan>
+    <!-- 全局ApplicationContext -->
+	<bean id="SpringContextHolder" class="com.springmvc.util.SpringContextHolder">
+	</bean>
 
 	<!-- 数据源配置 -->
     <bean id="defaultDataSource" class="org.springframework.jdbc.datasource.DriverManagerDataSource">  
@@ -66,10 +69,10 @@
 	   <tx:attributes>
 	     <tx:method name="delete*" propagation="REQUIRED" read-only="false" rollback-for="java.lang.Exception" no-rollback-for="java.lang.RuntimeException"/>
 	     <tx:method name="insert*" propagation="REQUIRED" read-only="false" rollback-for="java.lang.Exception" />
-	     <tx:method name="update*" propagation="REQUIRED" read-only="false" rollback-for="java.lang.Exception" />
-	
+	     <tx:method name="update*" propagation="REQUIRED" read-only="false" rollback-for="java.lang.Exception" />	
 	   </tx:attributes>
-	</tx:advice>	  
+	</tx:advice>	 
+	<!-- 事务仅在service层切入 -->	 
 	<aop:config>    
 	   <aop:pointcut id="ServiceMethods" expression="execution(* com.springmvc.service.impl.*.*(..))" />
 	   <aop:advisor pointcut-ref="ServiceMethods" advice-ref="txAdvice" />
@@ -86,7 +89,31 @@
 	    <property name="sqlSessionFactory" ref="sqlSessionFactory"></property>  
 	</bean>  
 	<!-- 引入同文件夹下的redis属性配置文件 -->
-	<import resource="redis-context.xml"/>
+<!-- 	<import resource="redis-context.xml"/> -->
+  <bean id="redisPoolConfig" class="redis.clients.jedis.JedisPoolConfig">  
+    <property name="maxIdle" value="${redis.maxIdle}" />  
+    <property name="maxTotal" value="${redis.maxActive}" />  
+    <property name="maxWaitMillis" value="${redis.maxWait}" />  
+    <property name="testOnBorrow" value="${redis.testOnBorrow}" />  
+  </bean>
+  <bean id="shardedJedisPool" class="redis.clients.jedis.ShardedJedisPool" scope="singleton">
+        <constructor-arg index="0" ref="redisPoolConfig" />
+        <constructor-arg index="1">
+            <list>
+                <bean name="master" class="redis.clients.jedis.JedisShardInfo">
+                    <constructor-arg index="0" name="host" value="${redis.host}" />
+                    <constructor-arg index="1" name="port" value="${redis.port}" />
+                </bean>
+            </list>
+        </constructor-arg>
+    </bean>   
+ 	<bean id="jedisConnectionFactory" class="org.springframework.data.redis.connection.jedis.JedisConnectionFactory"  
+	    p:host-name="${redis.host}" 
+	    p:port="${redis.port}" 
+	    p:password=""  
+	    p:pool-config-ref="redisPoolConfig"/>
+
+
 </beans>
 
 

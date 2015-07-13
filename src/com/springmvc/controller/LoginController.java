@@ -24,18 +24,22 @@ import org.springframework.web.servlet.ModelAndView;
 
 import com.alibaba.fastjson.JSONObject;
 import com.springmvc.entity.User;
+import com.springmvc.redis.dao.RedisUserDao;
+import com.springmvc.redis.dao.impl.RedisUserDaoImpl;
 import com.springmvc.service.UserService;
+import com.springmvc.util.SpringContextHolder;
 
 @Controller
 public class LoginController {
-	//@Autowired
-	//@Qualifier("userService")
-	private UserService userService;  //业务层注入
-	
+	//@Resource(name="UserService")
+	private UserService userService;  //由于事务控制，controller和service层分离，导致两者上下文环境不同，不能注解注入，需要手动注入
+	@Autowired
+	private RedisUserDao redisUserDaoImpl;
+
     @RequestMapping(value="/login",method=RequestMethod.POST)  
     public ModelAndView login(String username,String password) throws Exception{  
-    	ApplicationContext ctx = new FileSystemXmlApplicationContext("classpath:WEB-INF/conf/spring/applicationContext.xml");
-    	userService = (UserService) ctx.getBean("userService");
+    	
+    	userService = (UserService) SpringContextHolder.getBean("userService");
         //验证传递过来的参数是否正确，否则返回到登陆页面。  
         if(this.checkParams(new String[]{username,password})){  
         	//通过业务层进行查询判断
@@ -82,8 +86,6 @@ public class LoginController {
 	// 该注解用于读取Request请求的body部分数据，使用系统默认配置的HttpMessageConverter进行解析，然后把相应的数据绑定到要返回的对象上；
 	public @ResponseBody List<User> hello(HttpServletRequest request,
             HttpServletResponse response) {
-    	ApplicationContext ctx = new FileSystemXmlApplicationContext("classpath:WEB-INF/conf/spring/applicationContext.xml");
-    	userService = (UserService) ctx.getBean("userService");
     	List<User> list = new ArrayList<User>();
 		User user1 = new User();
 		user1.setName("xiaoming");
@@ -93,6 +95,8 @@ public class LoginController {
 		user2.setName("xiaowang");
 		user2.setPassword("456");
 		list.add(user2);
+        //同时写入redis
+        redisUserDaoImpl.insertUser(user1);
 		//System.out.println(request.getSession().toString());
         return list;  
 	}

@@ -15,14 +15,13 @@ import redis.clients.jedis.Jedis;
 
 public class RedisTest {
 	//@Autowired
-	private static RedisClientTemplate redisClientTemplate; //依赖注入
+	//private static RedisClientTemplate redisClientTemplate; //依赖注入
 	
 	private static ApplicationContext ctx = new FileSystemXmlApplicationContext("classpath:WEB-INF/conf/spring/applicationContext.xml");
 	
 	public static void main(String[] args) {
 		
         RedisClientTemplate redisClientTemplate = (RedisClientTemplate) ctx.getBean("redisClientTemplate");
-		//RedisClientTemplate redisClient = new RedisClientTemplate();
 		redisClientTemplate.set("a", "123");
         System.out.println(redisClientTemplate.get("a"));
 
