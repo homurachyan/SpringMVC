@@ -89,14 +89,14 @@
 	    <property name="sqlSessionFactory" ref="sqlSessionFactory"></property>  
 	</bean>  
 	<!-- 引入同文件夹下的redis属性配置文件 -->
-<!-- 	<import resource="redis-context.xml"/> -->
-  <bean id="redisPoolConfig" class="redis.clients.jedis.JedisPoolConfig">  
-    <property name="maxIdle" value="${redis.maxIdle}" />  
-    <property name="maxTotal" value="${redis.maxActive}" />  
-    <property name="maxWaitMillis" value="${redis.maxWait}" />  
-    <property name="testOnBorrow" value="${redis.testOnBorrow}" />  
-  </bean>
-  <bean id="shardedJedisPool" class="redis.clients.jedis.ShardedJedisPool" scope="singleton">
+	<!-- 	<import resource="redis-context.xml"/> -->
+	<bean id="redisPoolConfig" class="redis.clients.jedis.JedisPoolConfig">  
+	    <property name="maxIdle" value="${redis.maxIdle}" />  
+	    <property name="maxTotal" value="${redis.maxActive}" />  
+	    <property name="maxWaitMillis" value="${redis.maxWait}" />  
+	    <property name="testOnBorrow" value="${redis.testOnBorrow}" />  
+	</bean>
+    <bean id="shardedJedisPool" class="redis.clients.jedis.ShardedJedisPool" scope="singleton">
         <constructor-arg index="0" ref="redisPoolConfig" />
         <constructor-arg index="1">
             <list>
