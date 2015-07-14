@@ -8,7 +8,7 @@
 <body>
     <body>      <h1>登入表单</h1>    
       
-<form action="/login" method="post">
+<form action="/SpringMVC/login" method="post">
 	username:<input type="text" name="username" />
 	<p>
 	password:<input type="password" name="password"/>

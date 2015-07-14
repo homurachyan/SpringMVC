@@ -52,6 +52,21 @@
             </list>
         </property>
     </bean>	 -->
+
+	<!--配置拦截器, 若配置多个拦截器,则顺序执行 -->  
+	<mvc:interceptors>    
+	    <mvc:interceptor>    
+	        <mvc:mapping path="/**" />  
+	        <bean class="com.springmvc.interceptor.LoginInterceptor">
+	        	<property name="unCheckUrls"> 
+                         <list> 
+                            <value>/login</value> 
+                          </list> 
+                </property> 
+	        </bean>    
+	    </mvc:interceptor>   
+	</mvc:interceptors>  
+
 	
      
    <!-- 配置JSP视图 -->
