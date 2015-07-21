@@ -8,34 +8,35 @@ import org.springframework.stereotype.Service;
 
 import com.springmvc.entity.User;
 import com.springmvc.redis.RedisClientTemplate;
+import com.springmvc.redis.RedisService;
 import com.springmvc.redis.dao.RedisUserDao;
 @Repository("redisUserDaoImpl")
 public class RedisUserDaoImpl implements RedisUserDao{
-	
-	@Autowired
-	private RedisClientTemplate redisClientTemplate; //依赖注入
+	private static ApplicationContext ctx = new FileSystemXmlApplicationContext("classpath:WEB-INF/conf/spring/applicationContext.xml");	
+	//@Autowired
+	private RedisService redisService; //依赖注入
 	
 	@Override
-	public User selectUser(User user) {
+	public User redisselectUser(User user) {
 		// TODO Auto-generated method stub
 		return null;
 	}
 
 	@Override
-	public int insertUser(User user) {		
-		redisClientTemplate.hset("user", "username", user.getName());
-		redisClientTemplate.hset("user", "password", user.getPassword());
+	public int redisinsertUser(User user) {		
+		redisService = (RedisService) ctx.getBean("redisService");
+		redisService.set("username", "xiaoming");
 		return 1;
 	}
 
 	@Override
-	public int updateUser(User user) {
+	public int redisupdateUser(User user) {
 		// TODO Auto-generated method stub
 		return 0;
 	}
 
 	@Override
-	public int deleteUser(int UserId) {
+	public int redisdeleteUser(int UserId) {
 		// TODO Auto-generated method stub
 		return 0;
 	}

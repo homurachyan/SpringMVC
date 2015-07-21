@@ -21,9 +21,9 @@ public class RedisTest {
 	
 	public static void main(String[] args) {
 		
-        RedisClientTemplate redisClientTemplate = (RedisClientTemplate) ctx.getBean("redisClientTemplate");
+/*        RedisClientTemplate redisClientTemplate = (RedisClientTemplate) ctx.getBean("redisClientTemplate");
 		redisClientTemplate.set("a", "123");
-        System.out.println(redisClientTemplate.get("a"));
+        System.out.println(redisClientTemplate.get("a"));*/
 
 	}
 

@@ -1,8 +1,12 @@
 package com.springmvc.service.impl;
 
+import java.util.List;
+import java.util.Map;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import com.github.miemiedev.mybatis.paginator.domain.PageBounds;
 import com.springmvc.dao.UserDao;
 import com.springmvc.entity.User;
 import com.springmvc.service.UserService;
@@ -31,5 +35,17 @@ public class UserServiceImpl implements UserService{
 
 	public void setUserDao(UserDao userDao) {
 		this.userDao = userDao;
+	}
+
+	@Override
+	public List<User> selectAllUser(Map param) {
+		// TODO Auto-generated method stub
+		return userDao.selectAllUser(param);
+	}
+
+	@Override
+	public List<User> selectAll(PageBounds pageBounds) {
+		// TODO Auto-generated method stub
+		return userDao.selectAll(pageBounds);
 	}
 }

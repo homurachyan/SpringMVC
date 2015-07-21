@@ -15,5 +15,13 @@
 	<delete id="deleteUser" parameterType="int">  
 	    DELETE FROM test.demo WHERE id=#{id}  
 	</delete>  
-	
+	<select id="selectUserId" parameterType="String" resultType="String">  
+	    SELECT id FROM test.demo WHERE name=#{name}
+	</select> 	
+	<select id="selectAllUser" parameterType="Map" resultType="com.springmvc.entity.User">  
+	    SELECT * FROM test.demo limit ${start},${pagesize} 
+	</select> 	
+	<select id="selectAll" resultType="com.springmvc.entity.User">  
+	    SELECT * FROM test.demo
+	</select> 
 </mapper>

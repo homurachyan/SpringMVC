@@ -10,10 +10,12 @@
     http://www.springframework.org/schema/context
     http://www.springframework.org/schema/context/spring-context-3.0.xsd
     http://www.springframework.org/schema/mvc
-    http://www.springframework.org/schema/mvc/spring-mvc-3.1.xsd">
+    http://www.springframework.org/schema/mvc/spring-mvc-3.2.xsd">
     
     <!-- 开启注解驱动 -->
 	<mvc:annotation-driven />   
+
+    <mvc:resources mapping="/static/**" location="/static/" />
 	  
     <!-- 扫描controller（controller层注入） -->
     <!-- <context:component-scan base-package="com.springmvc.controller"/>   -->
@@ -31,7 +33,7 @@
 	<!--Spring3.1开始的注解 HandlerAdapter -->  
 	<bean class="org.springframework.web.servlet.mvc.method.annotation.RequestMappingHandlerAdapter"/>  
 	
-    <!--Spring3.1开始的注解 HandlerAdapter -->  
+    <!--Spring默认注解 HandlerAdapter -->  
 <!-- 	<bean id="messageAdapter" class="org.springframework.web.servlet.mvc.annotation.AnnotationMethodHandlerAdapter">
         <property name="messageConverters">
             <list>
@@ -57,17 +59,53 @@
 	<mvc:interceptors>    
 	    <mvc:interceptor>    
 	        <mvc:mapping path="/**" />  
+	        <mvc:exclude-mapping path="/static/**"/>
 	        <bean class="com.springmvc.interceptor.LoginInterceptor">
 	        	<property name="unCheckUrls"> 
                          <list> 
                             <value>/login</value> 
+                            <value>/login.json</value>
                           </list> 
                 </property> 
 	        </bean>    
 	    </mvc:interceptor>   
 	</mvc:interceptors>  
-
-	
+	<!-- ContentNegotiatingViewResolver视图解析器,利用他就可以配置多种返回值 -->
+    <bean class="org.springframework.web.servlet.view.ContentNegotiatingViewResolver">
+      <property name="order" value="1" />
+      <property name="mediaTypes">
+        <map>
+           <entry key="json" value="application/json" />
+        </map>
+      </property>
+      
+      <property name="defaultViews">
+        <list>
+          <!-- JSON View -->
+          <bean
+            class="org.springframework.web.servlet.view.json.MappingJacksonJsonView">
+          </bean>
+ 
+          <!-- JAXB XML View -->
+<!--           <bean class="org.springframework.web.servlet.view.xml.MarshallingView">
+            <constructor-arg>
+                <bean class="org.springframework.oxm.jaxb.Jaxb2Marshaller">
+                   <property name="classesToBeBound">
+                    <list>
+                       <value>com.mkyong.common.model.Fruit</value>
+                    </list>
+                   </property>
+                </bean>
+            </constructor-arg>
+          </bean> -->
+         </list>
+      </property>
+      <!-- 用于开启 http://www.sxrczx.com/rest?format=json 的支持 -->
+	  <!-- <property name="favorParameter" value="false"/>  -->
+	  <!-- 设置为true以忽略对Accept Header的支持-->
+      <property name="ignoreAcceptHeader" value="false" />
+ 
+    </bean>	
      
    <!-- 配置JSP视图 -->
    <bean id="viewResolver" class="org.springframework.web.servlet.view.InternalResourceViewResolver">
@@ -75,69 +113,4 @@
 	    <property name="prefix" value="/WEB-INF/view/"/>  
 	    <property name="suffix" value=".jsp"/>   
    </bean>      
-   
-   <!-- ContentNegotiatingViewResolver视图解析器,利用他就可以配置多种返回值 -->
-
-<!--  配置Json视图
-   <bean id="mappingJacksonHttpMessageConverter" class="org.springframework.http.converter.json.MappingJacksonHttpMessageConverter">
-       <property name="supportedMediaTypes">
-           <list>
-               <value>application/json;charset=UTF-8</value>
-           </list>
-       </property>     
-       <property name="objectMapper">
-           <bean class="org.codehaus.jackson.map.ObjectMapper">
-               <property name="dateFormat">
-                   <bean class="java.text.SimpleDateFormat">
-                       <constructor-arg index="0" type="java.lang.String" value="yyyy-MM-dd HH:mm:ss"/>
-                   </bean>
-               </property>
-           </bean>
-       </property>
-   </bean>
-   <bean id="stringHttpMessageConverter" class="org.springframework.http.converter.StringHttpMessageConverter"/>
-   <bean id="requestMappingHandlerAdapter" class="org.springframework.web.servlet.mvc.method.annotation.RequestMappingHandlerAdapter">
-       <property name="messageConverters">
-           <list>
-               <ref bean="mappingJacksonHttpMessageConverter"/>
-               <ref bean="stringHttpMessageConverter"/>
-           </list>
-       </property>
-   </bean>
-   <bean name="jsonView" class="org.springframework.web.servlet.view.json.MappingJacksonJsonView">
-	    <property name="encoding">
-	        <value type="org.codehaus.jackson.JsonEncoding">UTF8</value>
-	    </property>
-	    <property name="contentType" value="text/html;charset=UTF-8"/>
-   </bean> -->
-   <!-- 配置XML视图 -->
-   <!-- 配置FreeMark视图 -->
-<!--    <bean id="freeMarkerViewResolver" class="org.springframework.web.servlet.view.freemarker.FreeMarkerViewResolver">
-        <property name="contentType" value="text/html;charset=UTF-8"/>      
-        <property name="viewClass" value="org.springframework.web.servlet.view.freemarker.FreeMarkerView"/>
-        <property name="suffix" value=".ftl"/>
-        <property name="cache" value="true"/>
-        <property name="exposeSessionAttributes" value="true"/>
-        <property name="exposeRequestAttributes" value="true"/>     
-        <property name="exposeSpringMacroHelpers" value="true"/>
-        在页面中使用${rc.contextPath}就可获得contextPath
-        <property name="requestContextAttribute" value="rc"/>
-        <property name="order" value="0"/>
-   </bean>   
-   <bean id="freemarkConfig" class="org.springframework.beans.factory.config.PropertiesFactoryBean">
-        <property name="location" value="classpath:freemark.properties"/>
-   </bean>
-     
-   <bean id="fmXmlEscape" class="freemarker.template.utility.XmlEscape"/>
-     
-   <bean id="FreeMarkerConfigurer" class="org.springframework.web.servlet.view.freemarker.FreeMarkerConfigurer">
-        <property name="templateLoaderPath" value="/WEB-INF/ftl/"/>
-        <property name="defaultEncoding" value="UTF-8"/>
-        <property name="freemarkerSettings" ref="freemarkConfig"/>
-        <property name="freemarkerVariables">
-            <map>
-                <entry key="xml_escape" value-ref="fmXmlEscape"/>
-            </map>
-        </property>
-   </bean> -->
 </beans>

@@ -3,6 +3,15 @@
     "-//mybatis.org//DTD Config 3.0//EN"  
     "http://mybatis.org/dtd/mybatis-3-config.dtd">  
 <configuration>  
+<!--      <plugins>
+        <plugin interceptor="com.github.miemiedev.mybatis.paginator.OffsetLimitInterceptor">
+            <property name="dialectClass" value="com.github.miemiedev.mybatis.paginator.dialect.MySQLDialect"/>
+        </plugin>
+    </plugins> -->
+<!--     <settings>  
+        <setting name="lazyLoadingEnabled" value="false"/>  
+        <setting name="aggressiveLazyLoading" value="true"/>  
+    </settings>   -->
     <mappers>  
         <mapper resource="com/springmvc/mybatis/UserDao.xml"/>  
     </mappers>  
